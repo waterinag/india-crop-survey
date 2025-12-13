@@ -153,6 +153,12 @@
                             Reset Filters
                         </button>
 
+                        <button id="downloadGeoJSON" class="btn btn-sm btn-success w-100 mt-2">
+    Download GeoJSON
+</button>
+
+
+
 
 
 
@@ -435,7 +441,7 @@
         function updateStats() {
             const extent = map.getView().calculateExtent(map.getSize());
             let count = 0;
-            console.log(vectorSource.getFeatures())
+            // console.log(vectorSource.getFeatures())
 
             vectorSource.getFeatures().forEach(f => {
                 if (!passesFilter(f)) return;
@@ -668,6 +674,45 @@
                 select.appendChild(opt);
             });
         }
+
+
+        // ----------------------
+// DOWNLOAD GEOJSON
+// ----------------------
+
+document.getElementById("downloadGeoJSON").addEventListener("click", () => {
+    const allFeatures = vectorSource.getFeatures();
+
+    // Filter the features using the same logic as the map style
+    const filtered = allFeatures.filter(f => passesFilter(f));
+
+    if (filtered.length === 0) {
+        alert("No features match the filter.");
+        return;
+    }
+    // console.log(filtered)
+
+    // Convert to GeoJSON
+    const geojson = new ol.format.GeoJSON().writeFeatures(filtered, {
+        featureProjection: "EPSG:3857",
+        dataProjection: "EPSG:4326"
+    });
+
+    // Create blob + download
+    const blob = new Blob([geojson], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "india_cwc_crop_survey.geojson";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+});
+
+
 
 
 
