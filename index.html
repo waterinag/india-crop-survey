@@ -135,7 +135,7 @@
                             </select>
                         </div>
 
-
+    
 
                         <div class="mb-2">
                             <label class="form-label">Irrigation Method</label>
@@ -350,7 +350,6 @@
             const season = normalize(document.getElementById('seasonFilter').value);
             const crop = normalize(document.getElementById('cropFilter').value);
             const cropType = normalize(document.getElementById('cropTypeFilter').value);
-            const irriMethod = normalize(document.getElementById('irriFilter').value);
             const irrigationMethod = normalize(document.getElementById('irrigationMethodFilter').value);
             const irrigationSource = normalize(document.getElementById('irrigationSourceFilter').value);
 
@@ -361,7 +360,7 @@
             if (season && normalize(feature.get('season')) !== season) return false;
             if (crop && normalize(feature.get('cropname')) !== crop) return false;
             if (cropType && normalize(feature.get('croptype')) !== cropType) return false;
-            if (irriMethod && normalize(feature.get('irriMethod')) !== irriMethod) return false;
+          
             if (irrigationMethod && normalize(feature.get('irrigationmethod')) !== irrigationMethod) return false;
             if (irrigationSource && normalize(feature.get('irrigationsource')) !== irrigationSource) return false;
 
@@ -376,7 +375,7 @@
 
 
 
-        ['seasonFilter', 'cropFilter', 'cropTypeFilter', 'irriFilter', 'irrigationMethodFilter', 'irrigationSourceFilter', 'startDate', 'endDate'].forEach(id => {
+        ['seasonFilter', 'cropFilter', 'cropTypeFilter', 'irrigationMethodFilter', 'irrigationSourceFilter', 'startDate', 'endDate'].forEach(id => {
             document.getElementById(id).addEventListener('change', () => {
                 vectorLayer.changed();
                 updateStats();
@@ -484,7 +483,6 @@
             document.getElementById('seasonFilter').value = '';
             document.getElementById('cropFilter').value = '';
             document.getElementById('cropTypeFilter').value = '';
-            document.getElementById('irriFilter').value = '';
             document.getElementById('irrigationMethodFilter').value = '';
             document.getElementById('irrigationSourceFilter').value = '';
             document.getElementById('startDate').value = '';
@@ -678,15 +676,14 @@
             const seasons = new Set();
             const crops = new Set();
             const cropTypes = new Set();
-            const IrriTypes = new Set();
             const irrigationMethods = new Set();
             const irrigationSources = new Set();
 
             vectorSource.getFeatures().forEach(f => {
+                console.log(f)
                 if (f.get('season')) seasons.add(f.get('season').trim());
                 if (f.get('cropname')) crops.add(f.get('cropname').trim());
                 if (f.get('croptype')) cropTypes.add(f.get('croptype').trim());
-                if (f.get('irriMethod')) IrriTypes.add(f.get('irriMethod').trim());
                 if (f.get('irrigationmethod')) irrigationMethods.add(f.get('irrigationmethod').trim());
                 if (f.get('irrigationsource')) irrigationSources.add(f.get('irrigationsource').trim());
             });
@@ -694,7 +691,7 @@
             fillSelect('seasonFilter', seasons);
             fillSelect('cropFilter', crops);
             fillSelect('cropTypeFilter', cropTypes);
-            fillSelect('irriFilter', IrriTypes);
+
             fillSelect('irrigationMethodFilter', irrigationMethods);
             fillSelect('irrigationSourceFilter', irrigationSources);
         }
