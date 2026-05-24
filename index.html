@@ -135,6 +135,27 @@
                             </select>
                         </div>
 
+                        <div class="mb-2">
+                            <label class="form-label">Irrigation Method</label>
+                            <select id="irriFilter" class="form-select form-select-sm">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Irrigation Method</label>
+                            <select id="irrigationMethodFilter" class="form-select form-select-sm">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Irrigation Source</label>
+                            <select id="irrigationSourceFilter" class="form-select form-select-sm">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+
                         <hr>
                         <h6>Data Collected Date</h6>
 
@@ -334,6 +355,9 @@
             const season = normalize(document.getElementById('seasonFilter').value);
             const crop = normalize(document.getElementById('cropFilter').value);
             const cropType = normalize(document.getElementById('cropTypeFilter').value);
+            const irriMethod = normalize(document.getElementById('irriFilter').value);
+            const irrigationMethod = normalize(document.getElementById('irrigationMethodFilter').value);
+            const irrigationSource = normalize(document.getElementById('irrigationSourceFilter').value);
 
             const startDate = toEpochStart(document.getElementById('startDate').value);
             const endDate = toEpochEnd(document.getElementById('endDate').value);
@@ -342,6 +366,9 @@
             if (season && normalize(feature.get('season')) !== season) return false;
             if (crop && normalize(feature.get('cropname')) !== crop) return false;
             if (cropType && normalize(feature.get('croptype')) !== cropType) return false;
+            if (irriMethod && normalize(feature.get('irriMethod')) !== irriMethod) return false;
+            if (irrigationMethod && normalize(feature.get('irrigationmethod')) !== irrigationMethod) return false;
+            if (irrigationSource && normalize(feature.get('irrigationsource')) !== irrigationSource) return false;
 
             // Date filter (created_date)
             const created = feature.get('created_date');
@@ -354,7 +381,7 @@
 
 
 
-        ['seasonFilter', 'cropFilter', 'cropTypeFilter', 'startDate', 'endDate'].forEach(id => {
+        ['seasonFilter', 'cropFilter', 'cropTypeFilter', 'irriFilter', 'irrigationMethodFilter', 'irrigationSourceFilter', 'startDate', 'endDate'].forEach(id => {
             document.getElementById(id).addEventListener('change', () => {
                 vectorLayer.changed();
                 updateStats();
@@ -462,6 +489,9 @@
             document.getElementById('seasonFilter').value = '';
             document.getElementById('cropFilter').value = '';
             document.getElementById('cropTypeFilter').value = '';
+            document.getElementById('irriFilter').value = '';
+            document.getElementById('irrigationMethodFilter').value = '';
+            document.getElementById('irrigationSourceFilter').value = '';
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
 
@@ -653,16 +683,25 @@
             const seasons = new Set();
             const crops = new Set();
             const cropTypes = new Set();
+            const IrriTypes = new Set();
+            const irrigationMethods = new Set();
+            const irrigationSources = new Set();
 
             vectorSource.getFeatures().forEach(f => {
                 if (f.get('season')) seasons.add(f.get('season').trim());
                 if (f.get('cropname')) crops.add(f.get('cropname').trim());
                 if (f.get('croptype')) cropTypes.add(f.get('croptype').trim());
+                if (f.get('irriMethod')) IrriTypes.add(f.get('irriMethod').trim());
+                if (f.get('irrigationmethod')) irrigationMethods.add(f.get('irrigationmethod').trim());
+                if (f.get('irrigationsource')) irrigationSources.add(f.get('irrigationsource').trim());
             });
 
             fillSelect('seasonFilter', seasons);
             fillSelect('cropFilter', crops);
             fillSelect('cropTypeFilter', cropTypes);
+            fillSelect('irriFilter', IrriTypes);
+            fillSelect('irrigationMethodFilter', irrigationMethods);
+            fillSelect('irrigationSourceFilter', irrigationSources);
         }
 
         function fillSelect(id, values) {
